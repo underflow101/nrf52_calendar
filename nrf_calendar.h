@@ -23,7 +23,7 @@
 #define CAL_RTC_IRQ_Priority    3
 
 // Initializes the calendar library. Run this before calling any other functions. 
-void nrf_cal_init(void);
+void nrf_cal_init();
 
 // Enables a callback feature in the calendar library that can call a function automatically at the specified interval (seconds).
 void nrf_cal_set_callback(void (*callback)(void), uint32_t interval);
@@ -36,12 +36,15 @@ void nrf_cal_set_time(uint32_t year, uint32_t month, uint32_t day, uint32_t hour
 
 // Returns the uncalibrated time as a tm struct. For more information about the tm struct and the time.h library in general please refer to:
 // http://www.tutorialspoint.com/c_standard_library/time_h.htm
-struct tm *nrf_cal_get_time(void);
+struct tm *nrf_cal_get_time();
 
 // Returns the calibrated time as a tm struct. If no calibration data is available it will return the uncalibrated time.
-struct tm *nrf_cal_get_time_calibrated(void);
+struct tm *nrf_cal_get_time_calibrated();
 
 // Returns a string for printing the date and time. Turn the calibration on/off by setting the calibrate parameter. 
 char *nrf_cal_get_time_string(bool calibrated);
+
+// Converts human time to unixtime
+int nrf_time_to_unixtime();
 
 #endif

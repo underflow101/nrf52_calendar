@@ -12,5 +12,6 @@ void setup() {
 void loop() {
     now = String(nrf_cal_get_time_string(true));
     Serial.println(now);
+    Serial.println(nrf_time_to_unixtime());
     delay(1000);
 }

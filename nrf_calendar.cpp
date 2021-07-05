@@ -1,3 +1,4 @@
+
 /* Copyright (c) 2014 Nordic Semiconductor. All Rights Reserved.
  *
  * The information contained herein is property of Nordic Semiconductor ASA.
@@ -19,7 +20,7 @@ static float m_calibrate_factor = 0.0f;
 static uint32_t m_rtc_increment = 60;
 static void (*cal_event_callback)(void) = 0;
  
-void nrf_cal_init(void)
+void nrf_cal_init()
 {
     // Select the 32 kHz crystal and start the 32 kHz clock
     NRF_CLOCK->LFCLKSRC = CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos;
@@ -55,7 +56,7 @@ void nrf_cal_set_time(uint32_t year, uint32_t month, uint32_t day, uint32_t hour
     time_struct.tm_mday = day;
     time_struct.tm_hour = hour;
     time_struct.tm_min = minute;
-    time_struct.tm_sec = second;   
+    time_struct.tm_sec = second;
     newtime = mktime(&time_struct);
     CAL_RTC->TASKS_CLEAR = 1;  
     
@@ -71,7 +72,7 @@ void nrf_cal_set_time(uint32_t year, uint32_t month, uint32_t day, uint32_t hour
     m_time = m_last_calibrate_time = newtime;
 }    
 
-struct tm *nrf_cal_get_time(void)
+struct tm *nrf_cal_get_time()
 {
     time_t return_time;
     return_time = m_time + CAL_RTC->COUNTER / 8;
@@ -79,7 +80,7 @@ struct tm *nrf_cal_get_time(void)
     return &m_tm_return_time;
 }
 
-struct tm *nrf_cal_get_time_calibrated(void)
+struct tm *nrf_cal_get_time_calibrated()
 {
     time_t uncalibrated_time, calibrated_time;
     if(m_calibrate_factor != 0.0f)
@@ -97,6 +98,19 @@ char *nrf_cal_get_time_string(bool calibrated)
     static char cal_string[80];
     strftime(cal_string, 80, "%x - %H:%M:%S", (calibrated ? nrf_cal_get_time_calibrated() : nrf_cal_get_time()));
     return cal_string;
+}
+
+int nrf_time_to_unixtime() {
+    struct tm unix_converter;
+    unix_converter.tm_year = time_struct.tm_year;
+    unix_converter.tm_mon = time_struct.tm_mon - 1;
+    unix_converter.tm_mday = time_struct.tm_mday;
+    unix_converter.tm_hour = time_struct.tm_hour;
+    unix_converter.tm_min = time_struct.tm_min;
+    unix_converter.tm_sec = time_struct.tm_sec + CAL_RTC->COUNTER / 8;
+    int newtime = mktime(&unix_converter);
+    
+    return newtime;
 }
  
 void CAL_RTC_IRQHandler(void)
