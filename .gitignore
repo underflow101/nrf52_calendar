@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# miscallenous
+.vscode
+__pycache__/
