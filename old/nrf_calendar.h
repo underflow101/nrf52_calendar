@@ -1,6 +1,7 @@
 #ifndef __NRF_CALENDAR_H__
 #define __NRF_CALENDAR_H__
 
+#include <stdint.h>
 #include <stdbool.h>
 #include "time.h"
 
@@ -8,7 +9,7 @@
 #define CAL_RTC                 NRF_RTC0
 #define CAL_RTC_IRQn            RTC0_IRQn
 #define CAL_RTC_IRQHandler      RTC0_IRQHandler
-#define CAL_RTC_IRQ_Priority    3
+#define CAL_RTC_IRQ_Priority    2
 
 // Initializes the calendar library. Run this before calling any other functions. 
 void nrf_cal_init();
@@ -16,6 +17,7 @@ void nrf_cal_init();
 // Enables a callback feature in the calendar library that can call a function automatically at the specified interval (seconds).
 void nrf_cal_set_callback(void (*callback)(void), uint32_t interval);
 
+// Sets the date and time stored in the calendar library. 
 // When this function is called a second time calibration data will be automatically generated based on the error in time since the
 // last call to the set time function. To ensure good calibration this function should not be called too often 
 // (depending on the accuracy of the 32 kHz clock it should be sufficient to call it between once a week and once a month). 
@@ -33,4 +35,4 @@ char *nrf_cal_get_time_string(bool calibrated);
 // Converts human time to unixtime
 int nrf_time_to_unixtime();
 
-#endif /* __NRF_CALENDAR_H__ */
+#endif
